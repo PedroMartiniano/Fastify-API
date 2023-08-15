@@ -16,3 +16,11 @@ model User {
   username  String @unique
   password  String
 }
+
+model Post {
+  id          String @id @default(uuid())
+  title       String
+  description String
+  createdAt   DateTime @default(now())
+  status      Int     @default(1)
+}

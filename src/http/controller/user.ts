@@ -1,7 +1,8 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import { z } from 'zod'
 import { CreateUser } from "../../use-cases/user"
-import { PrismaUserRepository } from "../../repositories/prisma-user-repository"
+import { PrismaUserRepository } from "../../repositories/prisma/prisma-user-repository"
+import { AppError } from "../../errors/AppError"
 
 export const createUserController = async (request: FastifyRequest, reply: FastifyReply) => {
 
@@ -15,17 +16,16 @@ export const createUserController = async (request: FastifyRequest, reply: Fasti
 
     const userRepository = new PrismaUserRepository
     const createUser = new CreateUser(userRepository)
-
-
+    
     try {
         await createUser.execute({ email, username, password })
     } catch (e) {
-        reply.status(400).send(e)
+        throw new AppError(`Algo deu errado`, 409)
     }
 
     return reply.status(201).send('created')
 }
 
-export const getUsersController = async (request: FastifyRequest, reply: FastifyReply) => {
-    
+export const getUserByIdController = async (request: FastifyRequest, reply: FastifyReply) => {
+
 }

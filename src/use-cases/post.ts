@@ -1,12 +1,19 @@
+import { Post } from "@prisma/client"
 
-interface CreatePostData {
+interface CreatePostRequest {
     title: string,
-    description: string
+    description: string,
+    userId: string
 }
 
-export class CreatePost{
-    constructor(private postRepository: any){}
-    async execute({title, description}: CreatePostData){
-        await this.postRepository.create({title, description})
+interface CreatePostResponse {
+    post: Post
+}
+
+export class CreatePost {
+    constructor(private postRepository: any) { }
+    async execute({ title, description }: CreatePostRequest): Promise<CreatePostResponse> {
+        const post = await this.postRepository.create({ title, description })
+        return { post }
     }
 }

@@ -1,4 +1,6 @@
 import { hash } from "bcrypt"
+import { AppError } from "../errors/AppError"
+import { User } from "@prisma/client"
 
 interface CreateUserRequest {
     email: string,
@@ -6,19 +8,25 @@ interface CreateUserRequest {
     password: string
 }
 
-export class CreateUser{
-    constructor(private userRepository: any){}
+interface CreateUserResponse {
+    user: User
+}
 
-    async execute({email, username, password}: CreateUserRequest){
+export class CreateUser {
+    constructor(private userRepository: any) { }
 
-        const user = await this.userRepository.getUserByEmail(email)
-        
-        if(user){
-            throw new Error('User already exists.')
+    async execute({ email, username, password }: CreateUserRequest): Promise<CreateUserResponse> {
+
+        const userWithSameEmail = await this.userRepository.getUserByEmail(email)
+        const userWithSameUsername = await this.userRepository.getUserByUsername(username)
+
+        if (userWithSameEmail || userWithSameUsername) {
+            throw new AppError('User already exists.')
         }
-        
+
         const hashPassword = await hash(password, 4)
-        
-        await this.userRepository.create({email, username, password: hashPassword})
+
+        const user = await this.userRepository.create({ email, username, password: hashPassword })
+        return { user }
     }
 }

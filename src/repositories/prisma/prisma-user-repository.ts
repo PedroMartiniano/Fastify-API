@@ -28,8 +28,14 @@ export class PrismaUserRepository implements UserRepository {
         return user
     }
 
-    // async getUsers() {
-    //     const users = await prisma.user.findMany()
-    //     return users
-    // }
+    async getUserById(id: string) {
+        const user = await prisma.user.findUnique({
+            where: {
+                id
+            }
+        })
+        return user
+    }
+
+    
 }

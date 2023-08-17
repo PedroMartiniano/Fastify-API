@@ -11,21 +11,27 @@ datasource db {
 }
 
 model User {
-  id        String @id @default(uuid())
-  email     String @unique
-  username  String @unique
-  password  String
-
-  posts     Post[]
+  id       String @id @default(uuid())
+  email    String @unique
+  username String @unique
+  password String
 }
 
-model Post {
-  id          String @id @default(uuid())
-  title       String
-  description String
-  createdAt   DateTime @default(now())
-  userId      String 
-  status      Int     @default(1)
+model Staff {
+  id       String @id @default(uuid())
+  cpf      String @unique
+  email    String @unique
+  username String @unique
+  password String
+  status   Int    @default(1)
+}
 
-  user        User @relation(fields: [userId], references: [id])
+model Course {
+  id          String @id @default(uuid())
+  name        String
+  description String
+  rating      Float  @default(0.0)
+  image       String
+  price       Float
+  status      Int    @default(1)
 }

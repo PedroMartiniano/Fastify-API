@@ -1,8 +1,10 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import { z } from 'zod'
-import { CreateUser } from "../../use-cases/user"
+import { UserClass } from "../../use-cases/user"
 import { PrismaUserRepository } from "../../repositories/prisma/prisma-user-repository"
 import { AppError } from "../../errors/AppError"
+import { User } from "@prisma/client"
+import { makeUserUseCase } from "../../use-cases/factory/make-user-use-case"
 
 export const createUserController = async (request: FastifyRequest, reply: FastifyReply) => {
 
@@ -14,11 +16,10 @@ export const createUserController = async (request: FastifyRequest, reply: Fasti
 
     const { email, username, password } = userSchema.parse(request.body)
 
-    const userRepository = new PrismaUserRepository
-    const createUser = new CreateUser(userRepository)
-    
+    const createUser = makeUserUseCase()
+
     try {
-        await createUser.execute({ email, username, password })
+        await createUser.executeCreateUser({ email, username, password })
     } catch (e) {
         throw new AppError(`Algo deu errado`, 409)
     }
@@ -26,6 +27,20 @@ export const createUserController = async (request: FastifyRequest, reply: Fasti
     return reply.status(201).send('created')
 }
 
-export const getUserByIdController = async (request: FastifyRequest, reply: FastifyReply) => {
+export const getUserByIdController = async (req: FastifyRequest, rep: FastifyReply) => {
+    const userSchema = z.object({
+        id: z.string()
+    })
 
+    const { id } = userSchema.parse(req.params)
+
+    const getUserById = makeUserUseCase()
+
+    let user
+    try {
+       user = await getUserById.executeGetUserById(id)
+    } catch (e) {
+        throw new AppError(`Algo deu errado`, 409)
+    }
+    return rep.status(200).send(user)
 }

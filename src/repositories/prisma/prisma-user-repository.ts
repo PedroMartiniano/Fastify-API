@@ -37,5 +37,9 @@ export class PrismaUserRepository implements UserRepository {
         return user
     }
 
-    
+    async getAllUsers() {
+        const users = await prisma.user.findMany()
+
+        return users
+    }
 }

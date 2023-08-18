@@ -18,4 +18,10 @@ export class PrismaCourseRepository implements CourseRepository {
         })
         return course
     }
+
+    async getAllCourses() {
+        const course = await prisma.course.findMany()
+
+        return course
+    }
 }

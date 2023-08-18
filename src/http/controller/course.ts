@@ -1,9 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import { z } from 'zod'
-import { PrismaCourseRepository as PrismaCourseRepository } from "../../repositories/prisma/prisma-course-repository"
-import { CourseClass } from "../../use-cases/course"
 import { AppError } from "../../errors/AppError"
-import { Prisma } from "@prisma/client"
 import { makeCourseUseCase } from "../../use-cases/factory/make-course-use-case"
 
 export const createCourseController = async (request: FastifyRequest, reply: FastifyReply) => {
@@ -44,4 +41,17 @@ export const getCourseByIdController = async (req: FastifyRequest, rep: FastifyR
     }
 
     return rep.status(200).send(course)
+}
+
+export const getAllCoursesController = async (req: FastifyRequest, rep: FastifyReply) => {
+    const getAllCourses = makeCourseUseCase()
+
+    let courses
+    try {
+        courses = await getAllCourses.getAllCourses()
+    } catch (e) {
+        throw new AppError(`${e}`, 409)
+    }
+
+    return rep.status(200).send(courses)
 }

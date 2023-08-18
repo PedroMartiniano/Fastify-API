@@ -7,21 +7,27 @@ interface CreateCourseRequest {
     price: number
 }
 
-interface CreateCourseResponse {
+interface CourseResponse {
     course: Course
 }
 
 export class CourseClass {
     constructor(private courseRepository: any) { }
     
-    async executeCreateCourse({ name, description, image, price }: CreateCourseRequest): Promise<CreateCourseResponse> {
-        const course = await this.courseRepository.create({ name, description, image, price })
+    async executeCreateCourse({ name, description, image, price }: CreateCourseRequest): Promise<CourseResponse> {
+        const course: Course = await this.courseRepository.create({ name, description, image, price })
         return { course }
     }
 
-    async getCourseById(id: string): Promise<CreateCourseResponse> {
+    async getCourseById(id: string): Promise<CourseResponse> {
         const course: Course = await this.courseRepository.getCourseById(id)
         return { course }
+    }
+
+    async getAllCourses(): Promise<Course[]> {
+        const courses: Course[] = await this.courseRepository.getAllCourses()
+
+        return courses
     }
 }
 

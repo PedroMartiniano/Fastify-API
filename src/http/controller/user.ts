@@ -1,9 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import { z } from 'zod'
-import { UserClass } from "../../use-cases/user"
-import { PrismaUserRepository } from "../../repositories/prisma/prisma-user-repository"
 import { AppError } from "../../errors/AppError"
-import { User } from "@prisma/client"
 import { makeUserUseCase } from "../../use-cases/factory/make-user-use-case"
 
 export const createUserController = async (request: FastifyRequest, reply: FastifyReply) => {
@@ -38,9 +35,22 @@ export const getUserByIdController = async (req: FastifyRequest, rep: FastifyRep
 
     let user
     try {
-       user = await getUserById.executeGetUserById(id)
+        user = await getUserById.executeGetUserById(id)
     } catch (e) {
         throw new AppError(`Algo deu errado`, 409)
     }
     return rep.status(200).send(user)
+}
+
+export const getAllUsersController = async (_req: FastifyRequest, rep: FastifyReply) => {
+    const getAllUsers = makeUserUseCase()
+
+    let users
+    try {
+        users = await getAllUsers.executeGetAllUsers()
+    } catch (e) {
+        throw new AppError(`Algo deu errado`, 409)
+    }
+
+    return rep.status(200).send(users)
 }

@@ -8,14 +8,14 @@ interface CreateUserRequest {
     password: string
 }
 
-interface CreateUserResponse {
+interface UserResponse {
     user: User
 }
 
 export class UserClass {
     constructor(private userRepository: any) { }
 
-    async executeCreateUser({ email, username, password }: CreateUserRequest): Promise<CreateUserResponse> {
+    async executeCreateUser({ email, username, password }: CreateUserRequest): Promise<UserResponse> {
 
         const userWithSameEmail = await this.userRepository.getUserByEmail(email)
         const userWithSameUsername = await this.userRepository.getUserByUsername(username)
@@ -30,9 +30,15 @@ export class UserClass {
         return { user }
     }
 
-    async executeGetUserById(id: string): Promise<CreateUserResponse> {
+    async executeGetUserById(id: string): Promise<UserResponse> {
         const user = await this.userRepository.getUserById(id)
 
         return { user }
+    }
+
+    async executeGetAllUsers(): Promise<User[]> {
+        const users = await this.userRepository.getAllUsers()
+
+        return users
     }
 }

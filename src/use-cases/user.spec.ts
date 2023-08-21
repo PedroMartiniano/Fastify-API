@@ -76,10 +76,11 @@ describe('User use case tests', () => {
 
         const userObj = await registerUseCase.executeGetUserById(user.id)
 
-        expect(userObj.user.id).toEqual(expect.any(String))
+
+        expect(userObj?.id).toEqual(expect.any(String))
     })
     it('should not get a user by id', async () => {
-        const { user } = await registerUseCase.executeGetUserById('not-valid-id')
+        const user = await registerUseCase.executeGetUserById('not-valid-id')
 
         expect(user).toBe(null)
     })

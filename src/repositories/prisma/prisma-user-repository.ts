@@ -42,4 +42,18 @@ export class PrismaUserRepository implements UserRepository {
 
         return users
     }
+
+    async editUser(id: string, email: string, username: string) {
+        const user = await prisma.user.update({
+            where: {
+                id
+            },
+            data: {
+                email,
+                username
+            }
+        })
+
+        return user
+    }
 }

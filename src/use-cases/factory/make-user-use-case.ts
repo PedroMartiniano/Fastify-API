@@ -3,7 +3,7 @@ import { UserClass } from "../user"
 
 export function makeUserUseCase(){
     const userRepository = new PrismaUserRepository
-    const createUser = new UserClass(userRepository)
+    const userUseCase = new UserClass(userRepository)
     
-    return createUser
+    return userUseCase
 }

@@ -8,7 +8,7 @@ export const createUserController = async (request: FastifyRequest, reply: Fasti
     const userSchema = z.object({
         email: z.string().email(),
         username: z.string(),
-        password: z.string().min(7)
+        password: z.string().min(6)
     })
 
     const { email, username, password } = userSchema.parse(request.body)
@@ -53,4 +53,30 @@ export const getAllUsersController = async (_req: FastifyRequest, rep: FastifyRe
     }
 
     return rep.status(200).send(users)
+}
+
+export const editUserController = async (req: FastifyRequest, rep: FastifyReply) => {
+    const userSchema = z.object({
+        email: z.string().email(),
+        username: z.string()
+    })
+
+    const idSchema = z.object({
+        id: z.string()
+    })
+
+    const { email, username } = userSchema.parse(req.body)
+    const { id } = idSchema.parse(req.params)
+
+    const editUser = makeUserUseCase()
+
+    let user
+
+    try {
+        user = await editUser.executeEditUser({ id, email, username })
+    } catch (e) {
+        throw new AppError(`algo deu errado`, 400)
+    }
+
+    return rep.status(200).send(user)
 }

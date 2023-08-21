@@ -3,7 +3,7 @@ import { CourseClass } from "../course"
 
 export function makeCourseUseCase() {
     const courseRepository = new PrismaCourseRepository
-    const createPost = new CourseClass(courseRepository)
+    const courseUseCase = new CourseClass(courseRepository)
 
-    return createPost
+    return courseUseCase
 }

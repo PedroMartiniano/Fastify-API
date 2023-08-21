@@ -6,4 +6,5 @@ export interface UserRepository {
     getUserByUsername(username: string): Promise<User | null>
     getUserById(id: string): Promise<User | null>
     getAllUsers(): Promise<User[] | null>
+    editUser(id: string, email: string, username: string): Promise<User | null>
 }

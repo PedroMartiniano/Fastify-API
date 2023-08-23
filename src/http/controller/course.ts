@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify"
 import { z } from 'zod'
 import { AppError } from "../../errors/AppError"
 import { makeCourseUseCase } from "../../use-cases/factory/make-course-use-case"
+import { makeModuleUseCase } from "../../use-cases/factory/make-module-use-case"
 
 export const createCourseController = async (request: FastifyRequest, reply: FastifyReply) => {
 
@@ -101,5 +102,13 @@ export const deleteCourseController = async (req: FastifyRequest, rep: FastifyRe
         throw new AppError('Something went wront', 400)
     }
 
-    return rep.status(200).send({course, message: "deleted"})
+    const deleteModules = makeModuleUseCase()
+
+    try {
+        await deleteModules.executeDeleteModulesByCourse(id)
+    } catch (e) {
+        throw new AppError("something went wrong", 500)
+    }
+
+    return rep.status(200).send({ course, message: "deleted" })
 }

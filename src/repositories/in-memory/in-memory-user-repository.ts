@@ -77,12 +77,16 @@ export class InMemoryUserRepository implements UserRepository {
         return userEdited
     }
 
-    async deleteUser(id: string): Promise<User> {
+    async deleteUser(id: string): Promise<User | null> {
         const user = this.items.find((user) => user.id === id)
 
         const indexUser = this.items.findIndex((user) => user.id === id)
 
-        return user
+        if (user) {
+            return user
+        }
+
+        return null
     }
 
 }

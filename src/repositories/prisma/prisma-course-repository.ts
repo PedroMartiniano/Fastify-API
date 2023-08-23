@@ -20,7 +20,15 @@ export class PrismaCourseRepository implements CourseRepository {
     }
 
     async getAllCourses() {
-        const course = await prisma.course.findMany()
+        const course = await prisma.course.findMany({
+            include: {
+                modules: {
+                    orderBy: {
+                        createdAt: 'asc'
+                    }
+                }
+            }
+        })
 
         return course
     }
@@ -45,7 +53,7 @@ export class PrismaCourseRepository implements CourseRepository {
                 status: 0
             }
         })
-        
+
         return course
     }
 }

@@ -54,7 +54,7 @@ export const getAllCoursesController = async (req: FastifyRequest, rep: FastifyR
         throw new AppError(`${e}`, 409)
     }
 
-    return rep.status(200).send(courses)
+    return rep.status(200).send({courses})
 }
 
 export const editCourseController = async (req: FastifyRequest, rep: FastifyReply) => {

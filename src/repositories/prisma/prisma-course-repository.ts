@@ -25,6 +25,9 @@ export class PrismaCourseRepository implements CourseRepository {
                 modules: {
                     orderBy: {
                         createdAt: 'asc'
+                    },
+                    include: {
+                        tasks: true
                     }
                 }
             }

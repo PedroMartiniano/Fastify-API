@@ -64,4 +64,27 @@ export class PrismaStaffRepository implements StaffRepository {
 
         return staff
     }
+
+    async deleteStaff(id: string): Promise<Staff> {
+        const staff = await prisma.staff.update({
+            where: {
+                id
+            },
+            data: {
+                status: 0
+            }
+        })
+
+        return staff
+    }
+
+    async getAllStafs(): Promise<Staff[] | null> {
+        const staff = await prisma.staff.findMany({
+            where: {
+                status: 1
+            }
+        })
+
+        return staff
+    }
 }

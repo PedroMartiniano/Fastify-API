@@ -62,4 +62,26 @@ export class StaffClass {
 
         return staff
     }
+
+    async executeDeleteStaff(id: string): Promise<Staff> {
+        const staffId = await this.staffRepository.getStaffById(id)
+
+        if(!staffId){
+            throw new AppError('staff dont exists')
+        }
+
+        if(staffId.status === 0) {
+            throw new AppError('staff already deleted')
+        }
+
+        const staff = await this.staffRepository.deleteStaff(id)
+
+        return staff
+    }
+
+    async executeGetAllStaffs(): Promise<Staff[] | null> {
+        const staffs = await this.staffRepository.getAllStafs()
+
+        return staffs
+    }
 }

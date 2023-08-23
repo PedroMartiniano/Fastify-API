@@ -55,3 +55,51 @@ export const getAllCoursesController = async (req: FastifyRequest, rep: FastifyR
 
     return rep.status(200).send(courses)
 }
+
+export const editCourseController = async (req: FastifyRequest, rep: FastifyReply) => {
+
+    const courseSchema = z.object({
+        name: z.string(),
+        description: z.string(),
+        image: z.string(),
+        price: z.number()
+    })
+
+    const idSchema = z.object({
+        id: z.string()
+    })
+
+    const { name, description, image, price } = courseSchema.parse(req.body)
+    const { id } = idSchema.parse(req.params)
+
+    const editCourse = makeCourseUseCase()
+
+    let course
+    try {
+        course = await editCourse.executeEditCourse({ name, description, image, price }, id)
+    } catch (e) {
+        throw new AppError('something went wrong', 400)
+    }
+
+    return rep.status(200).send(course)
+}
+
+export const deleteCourseController = async (req: FastifyRequest, rep: FastifyReply) => {
+
+    const idSchema = z.object({
+        id: z.string()
+    })
+
+    const { id } = idSchema.parse(req.params)
+
+    const deleteCourse = makeCourseUseCase()
+
+    let course
+    try {
+        course = await deleteCourse.executeDeleteCourse(id)
+    } catch (e) {
+        throw new AppError('Something went wront', 400)
+    }
+
+    return rep.status(200).send({course, message: "deleted"})
+}

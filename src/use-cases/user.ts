@@ -39,14 +39,12 @@ export class UserClass {
     async executeGetUserById(id: string): Promise<User | null> {
         const user = await this.userRepository.getUserById(id)
 
-
-
         return user
     }
 
     async executeGetAllUsers(): Promise<User[] | null> {
         const users = await this.userRepository.getAllUsers()
-
+        console.log(users)
         return users
     }
 
@@ -71,5 +69,21 @@ export class UserClass {
         if (!user) return null
 
         return { user }
+    }
+
+    async executeDeleteUser(id: string): Promise<User> {
+        const userId = await this.userRepository.getUserById(id)
+
+        if (!userId) {
+            throw new AppError('User dont exist')
+        }
+
+        if (userId.status === 0) {
+            throw new AppError('User already deleted')
+        }
+
+        const user = await this.userRepository.deleteUser(id)
+
+        return user
     }
 }

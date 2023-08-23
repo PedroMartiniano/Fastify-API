@@ -3,6 +3,10 @@ import { UserRepository } from "../user-repository";
 
 export class InMemoryUserRepository implements UserRepository {
     public items: User[] = []
+    public usersItem: User[] = [
+        { id: '123', email: 'pedro@gmail.com', username: 'pedro', password: '123456', status: 1 },
+        { id: '321', email: 'pedro2@gmail.com', username: 'pedro2', password: '123456', status: 1 }
+    ]
 
     async getUserByEmail(email: string): Promise<User | null> {
         const user = this.items.find(item => item.email === email)
@@ -29,7 +33,8 @@ export class InMemoryUserRepository implements UserRepository {
             id: 'user-1',
             username: data.username,
             email: data.email,
-            password: data.password
+            password: data.password,
+            status: 1
         }
 
         this.items.push(user)
@@ -48,7 +53,7 @@ export class InMemoryUserRepository implements UserRepository {
     }
 
     async getAllUsers(): Promise<User[] | null> {
-        const users = this.items
+        const users = this.usersItem
 
         return users
     }
@@ -57,7 +62,7 @@ export class InMemoryUserRepository implements UserRepository {
         const user = this.items.find((user) => user.id === id)
         const indexUser = this.items.findIndex((user) => user.id === id)
 
-        if(!user){
+        if (!user) {
             return null
         }
 
@@ -67,9 +72,17 @@ export class InMemoryUserRepository implements UserRepository {
             username
         }
 
-        const userArray = this.items[indexUser] = newUser
+        const userEdited = this.items[indexUser] = newUser
 
-        return userArray
+        return userEdited
+    }
+
+    async deleteUser(id: string): Promise<User> {
+        const user = this.items.find((user) => user.id === id)
+
+        const indexUser = this.items.findIndex((user) => user.id === id)
+
+        return user
     }
 
 }

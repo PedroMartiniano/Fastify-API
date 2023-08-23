@@ -80,3 +80,22 @@ export const editUserController = async (req: FastifyRequest, rep: FastifyReply)
 
     return rep.status(200).send(user)
 }
+
+export const deleteUserController = async (req: FastifyRequest, rep: FastifyReply) => {
+    const idSchema = z.object({
+        id: z.string()
+    })
+
+    const { id } = idSchema.parse(req.params)
+
+    const deleteUser = makeUserUseCase()
+
+    let user
+    try {
+        user = await deleteUser.executeDeleteUser(id)
+    } catch (e) {
+        throw new AppError('something went wrong')
+    }
+
+    return rep.status(200).send({user, message: 'deleted'})
+}

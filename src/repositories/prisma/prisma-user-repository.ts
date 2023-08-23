@@ -38,7 +38,11 @@ export class PrismaUserRepository implements UserRepository {
     }
 
     async getAllUsers() {
-        const users = await prisma.user.findMany()
+        const users = await prisma.user.findMany({
+            where: {
+                status: 1
+            }
+        })
 
         return users
     }
@@ -51,6 +55,19 @@ export class PrismaUserRepository implements UserRepository {
             data: {
                 email,
                 username
+            }
+        })
+
+        return user
+    }
+
+    async deleteUser(id: string) {
+        const user = await prisma.user.update({
+            where: {
+                id
+            },
+            data: {
+                status: 0
             }
         })
 

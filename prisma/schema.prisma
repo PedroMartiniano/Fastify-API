@@ -15,6 +15,7 @@ model User {
   email    String @unique
   username String @unique
   password String
+  status   Int    @default(1)
 }
 
 model Staff {
@@ -34,4 +35,17 @@ model Course {
   image       String
   price       Float
   status      Int    @default(1)
+
+  modules     Module[]
+}
+
+model Module {
+  id          String @id @default(uuid())
+  name        String
+  description String
+  createdAt   DateTime @default(now())
+  id_course   String
+  status      Int     @default(1)
+
+  course      Course @relation(fields: [id_course], references: [id])
 }

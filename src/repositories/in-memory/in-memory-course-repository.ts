@@ -3,6 +3,10 @@ import { CourseRepository } from "../course-repository";
 
 export class InMemoryCourseRepository implements CourseRepository {
     public items: Course[] = []
+    public courseItems: Course[] = [
+        { id: '123', name: 'course', description: 'course description', rating: 0, image: 'abc', price: 10, status: 1 },
+        { id: '321', name: 'course2', description: 'course description2', rating: 0, image: 'cba', price: 15, status: 1 }
+    ]
 
     async create(data: Prisma.CourseCreateInput): Promise<Course> {
         const course = {
@@ -28,5 +32,11 @@ export class InMemoryCourseRepository implements CourseRepository {
         }
 
         return course
+    }
+
+    async getAllCourses(): Promise<Course[] | null> {
+        const courses = this.courseItems
+
+        return courses
     }
 }

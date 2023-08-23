@@ -12,7 +12,7 @@ describe('Should test course components', () => {
         courseUseCase = new CourseClass(courseRepository)
     })
     it('should create a course', async () => {
-        const { course } = await courseUseCase.executeCreateCourse({
+        const course  = await courseUseCase.executeCreateCourse({
             name: 'nome course',
             description: 'descrição do curso',
             image: 'abc',
@@ -23,7 +23,7 @@ describe('Should test course components', () => {
     })
 
     it('should get a course by id', async () => {
-        const { course } = await courseUseCase.executeCreateCourse({
+        const course = await courseUseCase.executeCreateCourse({
             name: 'nome curso',
             description: 'descrição do curso',
             image: 'abc',
@@ -32,11 +32,11 @@ describe('Should test course components', () => {
 
         const getCourse = await courseUseCase.getCourseById(course.id)
 
-        expect(getCourse.course.id).toEqual(expect.any(String))
+        expect(getCourse.id).toEqual(expect.any(String))
     })
 
     it('should not get a course by id', async () => {
-        const { course } = await courseUseCase.getCourseById('not-valid-id')
+        const course = await courseUseCase.getCourseById('not-valid-id')
 
         expect(course).toBe(null)
     })

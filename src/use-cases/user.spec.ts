@@ -84,4 +84,31 @@ describe('User use case tests', () => {
 
         expect(user).toBe(null)
     })
+
+    it('should get all users', async () => {
+        const users = await registerUseCase.executeGetAllUsers()
+
+        expect(users).toEqual([
+            { id: '123', email: 'pedro@gmail.com', username: 'pedro', password: '123456' },
+            { id: '321', email: 'pedro2@gmail.com', username: 'pedro2', password: '123456' }
+        ])
+    })
+
+    it('should edit a user', async () => {
+        const { user } = await registerUseCase.executeCreateUser({
+            email: "jhondoe@example.com",
+            username: 'JhonDoe',
+            password: '1234567'
+        })
+
+        const edit = await registerUseCase.executeEditUser({
+            id: user.id,
+            email: 'editado@gmail.com',
+            username: 'editado'
+        })
+        
+        let password = edit?.user.password
+        
+        expect(edit).toEqual({user: {id: 'user-1', email: 'editado@gmail.com', username: 'editado', password: password}})
+    })
 })

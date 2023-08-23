@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Course, Prisma } from "@prisma/client";
 import prisma from "../../lib/prisma";
 import { CourseRepository } from "../course-repository";
 
@@ -10,7 +10,7 @@ export class PrismaCourseRepository implements CourseRepository {
         return course
     }
 
-    async getCourseById(id: string){
+    async getCourseById(id: string) {
         const course = await prisma.course.findUnique({
             where: {
                 id
@@ -22,6 +22,30 @@ export class PrismaCourseRepository implements CourseRepository {
     async getAllCourses() {
         const course = await prisma.course.findMany()
 
+        return course
+    }
+
+    async editCourse(data: Prisma.CourseCreateInput, id: string): Promise<Course> {
+        const edit = await prisma.course.update({
+            where: {
+                id
+            },
+            data
+        })
+
+        return edit
+    }
+
+    async deleteCourse(id: string): Promise<Course> {
+        const course = await prisma.course.update({
+            where: {
+                id
+            },
+            data: {
+                status: 0
+            }
+        })
+        
         return course
     }
 }

@@ -20,4 +20,17 @@ export class PrismaTasksRepository implements TasksRepository {
 
         return task
     }
+
+    async deleteTaskById(id: string): Promise<Tasks | null> {
+        const task = await prisma.tasks.update({
+            where: {
+                id
+            },
+            data : {
+                status: 0
+            }
+        })
+
+        return task
+    }
 }

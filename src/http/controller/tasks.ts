@@ -47,13 +47,14 @@ export const getTaskByIdController = async (req: FastifyRequest, rep: FastifyRep
     return rep.status(200).send(task)
 }
 
-export const deleteTaksByIdController = async (req: FastifyRequest, rep: FastifyReply) => {
+export const deleteTaskByIdController = async (req: FastifyRequest, rep: FastifyReply) => {
     const idSchema = z.object({
         id: z.string()
     })
 
     const { id } = idSchema.parse(req.params)
 
-    const getTaskUseCase = makeTasksUseCase()
+    const deleteTask = makeTasksUseCase()
 
+    
 }

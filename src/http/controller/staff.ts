@@ -4,7 +4,7 @@ import { makeStaffUseCase } from "../../use-cases/factory/make-staff-use-case"
 import { AppError } from "../../errors/AppError"
 
 
-export const CreateStaffController = async (req: FastifyRequest, rep: FastifyReply) => {
+export const createStaffController = async (req: FastifyRequest, rep: FastifyReply) => {
     const staffSchema = z.object({
         cpf: z.string().length(11),
         email: z.string().email(),
@@ -26,7 +26,7 @@ export const CreateStaffController = async (req: FastifyRequest, rep: FastifyRep
     return rep.status(201).send(staff)
 }
 
-export const GetStaffById = async (req: FastifyRequest, rep: FastifyReply) => {
+export const getStaffById = async (req: FastifyRequest, rep: FastifyReply) => {
     const idSchema = z.object({
         id: z.string()
     })
@@ -45,7 +45,7 @@ export const GetStaffById = async (req: FastifyRequest, rep: FastifyReply) => {
     return rep.status(200).send(staff)
 }
 
-export const EditStaffController = async (req: FastifyRequest, rep: FastifyReply) => {
+export const editStaffController = async (req: FastifyRequest, rep: FastifyReply) => {
     const staffSchema = z.object({
         email: z.string().email(),
         username: z.string()

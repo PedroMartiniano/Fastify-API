@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { createUserController, deleteUserController, editUserController, getAllUsersController, getUserByIdController } from "./controller/user";
 import { createCourseController, deleteCourseController, editCourseController, getAllCoursesController, getCourseByIdController } from "./controller/course";
-import { CreateStaffController, EditStaffController, GetStaffById, deleteStaffController, getAllStaffsController } from "./controller/staff";
+import { createStaffController, editStaffController, getStaffById, deleteStaffController, getAllStaffsController } from "./controller/staff";
 import { createModuleController, editModuleController, getModuleByIdController } from "./controller/module";
 import { createTaskController, getTaskByIdController } from "./controller/tasks";
 
@@ -12,9 +12,9 @@ export const appRoutes = async (app: FastifyInstance) => {
     app.put('/user/:id', editUserController)
     app.delete('/user/:id', deleteUserController)
 
-    app.post('/staff', CreateStaffController)
-    app.get('/staff/:id', GetStaffById)
-    app.put('/staff/:id', EditStaffController)
+    app.post('/staff', createStaffController)
+    app.get('/staff/:id', getStaffById)
+    app.put('/staff/:id', editStaffController)
     app.delete('/staff/:id', deleteStaffController)
     app.get('/staffs', getAllStaffsController)
 

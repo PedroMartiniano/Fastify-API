@@ -56,5 +56,31 @@ export const deleteTaskByIdController = async (req: FastifyRequest, rep: Fastify
 
     const deleteTask = makeTasksUseCase()
 
-    
+    let task
+    try {
+        task = await deleteTask.executeDeleteTaskById(id)
+    } catch (e) {
+        throw new AppError('something went wrong', 500)
+    }
+
+    return rep.status(200).send({ task, message: 'Deleted' })
+}
+
+export const getTasksByIdModuleController = async (req: FastifyRequest, rep: FastifyReply) => {
+    const idModuleSchema = z.object({
+        id_module: z.string()
+    })
+
+    const { id_module } = idModuleSchema.parse(req.params)
+
+    const getTasksByIdModuleUseCase = makeTasksUseCase()
+
+    let tasks
+    try {
+        tasks = await getTasksByIdModuleUseCase.getTaksByIdModule(id_module)
+    } catch (e) {
+        throw new AppError('Something went wrong',)
+    }
+
+    return rep.status(200).send(tasks)
 }

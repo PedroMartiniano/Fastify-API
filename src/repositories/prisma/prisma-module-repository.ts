@@ -54,4 +54,17 @@ export class PrismaModuleRepository implements ModuleRepository {
 
         return false
     }
+
+    async getModuleByCourse(id_course: string): Promise<Module[] | null> {
+        const modules = await prisma.module.findMany({
+            where: {
+                id_course
+            },
+            orderBy: {
+                createdAt: 'asc'
+            }
+        })
+
+        return modules
+    }
 }

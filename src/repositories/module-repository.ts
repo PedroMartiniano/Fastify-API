@@ -5,4 +5,5 @@ export interface ModuleRepository {
     getModuleById(id: string): Promise<Module | null>
     editModule(id: string, name: string, description: string): Promise<Module>
     deleteModuleByCourse(id_course: string): Promise<boolean>
+    getModuleByCourse(id_course: string): Promise<Module[] | null>
 }

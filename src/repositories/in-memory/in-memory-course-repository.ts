@@ -1,6 +1,13 @@
 import { Course, Prisma, } from "@prisma/client";
 import { CourseRepository } from "../course-repository";
 
+type EditCourse = {
+    name: string,
+    description: string,
+    image: string,
+    price: number
+}
+
 export class InMemoryCourseRepository implements CourseRepository {
     public items: Course[] = []
     public courseItems: Course[] = [
@@ -10,7 +17,7 @@ export class InMemoryCourseRepository implements CourseRepository {
 
     async create(data: Prisma.CourseCreateInput): Promise<Course> {
         const course = {
-            id: 'Course-1',
+            id: `${this.items.length}`,
             name: data.name,
             description: data.description,
             rating: 0,
@@ -38,5 +45,44 @@ export class InMemoryCourseRepository implements CourseRepository {
         const courses = this.courseItems
 
         return courses
+    }
+
+    async editCourse({ name, description, image, price }: EditCourse, id: string): Promise<Course | null> {
+        const indexCourse = this.items.findIndex((course) => course.id === id)
+        const course = this.items.find((course) => course.id === id)
+
+        if (!course) {
+            return null
+        }
+
+        let newCourse = {
+            ...course,
+            name,
+            description,
+            image,
+            price
+        }
+
+        this.items[indexCourse] = newCourse
+        const courseEdited = this.items[indexCourse]
+
+        return courseEdited
+    }
+
+    async deleteCourse(id: string): Promise<Course> {
+        const indexCourse = this.items.findIndex((course) => course.id === id)
+
+        let course = this.items[indexCourse]
+
+        course = {
+            ...course,
+            status: 0
+        }
+
+        this.items[indexCourse] = course
+
+        const courseDeleted = this.items[indexCourse]
+
+        return courseDeleted
     }
 }

@@ -71,3 +71,22 @@ export const editModuleController = async (req: FastifyRequest, rep: FastifyRepl
 
     return rep.status(200).send(moduleEdit)
 }
+
+export const getModulesByCourseController = async (req: FastifyRequest, rep: FastifyReply) => {
+    const idCourseSchema = z.object({
+        id_course: z.string()
+    })
+
+    const { id_course } = idCourseSchema.parse(req.params)
+
+    const getModulesByCourseUseCase = makeModuleUseCase()
+
+    let modules
+    try {
+        modules = await getModulesByCourseUseCase.executeGetModuleByCourse(id_course)
+    } catch (e) {
+        throw new AppError('Something went wrong', 400)
+    }
+
+    return rep.status(200).send(modules)
+}

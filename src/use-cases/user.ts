@@ -44,7 +44,6 @@ export class UserClass {
 
     async executeGetAllUsers(): Promise<User[] | null> {
         const users = await this.userRepository.getAllUsers()
-        console.log(users)
         return users
     }
 
@@ -54,6 +53,10 @@ export class UserClass {
 
         if (!userExist) {
             throw new AppError('User not found')
+        }
+
+        if (userExist.status === 0) {
+            throw new AppError('User is deleted')
         }
 
         const userEmail = await this.userRepository.getUserByEmail(email)
@@ -66,7 +69,9 @@ export class UserClass {
 
         const user = await this.userRepository.editUser(id, email, username)
 
-        if (!user) return null
+        if (!user) {
+            return null
+        }
 
         return { user }
     }

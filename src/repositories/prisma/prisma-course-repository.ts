@@ -36,7 +36,7 @@ export class PrismaCourseRepository implements CourseRepository {
         return course
     }
 
-    async editCourse(data: Prisma.CourseCreateInput, id: string): Promise<Course> {
+    async editCourse(data: Prisma.CourseCreateInput, id: string): Promise<Course | null> {
         const edit = await prisma.course.update({
             where: {
                 id

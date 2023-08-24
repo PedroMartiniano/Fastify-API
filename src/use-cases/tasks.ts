@@ -15,4 +15,16 @@ export class TasksClassUseCase {
 
         return task
     }
+
+    async executeDeleteTaskById(id: string): Promise<Tasks | null> {
+        const task = await this.tasksRepository.getTaskById(id)
+
+        return task
+    }
+
+    async getTaksByIdModule(id_module: string): Promise<Tasks[] | null> {
+        const tasks = await this.tasksRepository.getTaskByIdModule(id_module)
+
+        return tasks
+    }
 }

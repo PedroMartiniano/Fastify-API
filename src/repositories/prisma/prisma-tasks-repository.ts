@@ -26,11 +26,24 @@ export class PrismaTasksRepository implements TasksRepository {
             where: {
                 id
             },
-            data : {
+            data: {
                 status: 0
             }
         })
 
         return task
+    }
+
+    async getTaskByIdModule(id_module: string): Promise<Tasks[] | null> {
+        const tasks = await prisma.tasks.findMany({
+            where: {
+                id_module
+            },
+            orderBy: {
+                createdAt: 'asc'
+            }
+        })
+
+        return tasks
     }
 }

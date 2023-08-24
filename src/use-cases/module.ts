@@ -43,4 +43,10 @@ export class ModuleClassUseCase {
 
         return modulesEdited
     }
+
+    async executeGetModuleByCourse(id_course: string): Promise<Module[] | null> {
+        const modules = await this.moduleRepository.getModuleByCourse(id_course)
+
+        return modules
+    }
 }

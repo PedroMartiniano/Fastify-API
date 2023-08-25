@@ -6,7 +6,7 @@ export interface StaffRepository {
     getStaffByEmail(email: string): Promise<Staff | null>
     getStaffByCpf(cpf: string): Promise<Staff | null>
     getStaffById(id: string): Promise<Staff | null>
-    editStaff(id: string, email: string, username: string): Promise<Staff>
+    editStaff(id: string, email: string, username: string): Promise<Staff | null>
     deleteStaff(id: string): Promise<Staff>
     getAllStafs(): Promise<Staff[] | null>
 }

@@ -1,4 +1,3 @@
-import { compare } from 'bcrypt'
 import { expect, describe, it, beforeEach } from 'vitest'
 import { InMemoryCourseRepository } from '../../repositories/in-memory/in-memory-course-repository'
 import { CourseClass } from '../course'

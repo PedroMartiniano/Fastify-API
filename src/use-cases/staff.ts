@@ -42,19 +42,26 @@ export class StaffClass {
         return getStaffById
     }
 
-    async executeEditStaff({ id, email, username }: EditStaffRequest): Promise<Staff> {
+    async executeEditStaff({ id, email, username }: EditStaffRequest): Promise<Staff | null> {
+        const getStaffById = await this.staffRepository.getStaffById(id)
+
+        if (!getStaffById) {
+            throw new AppError("Staff dont exists")
+
+        }
+
         const getStaffByEmail = await this.staffRepository.getStaffByEmail(email)
         const getStaffByUsername = await this.staffRepository.getStaffByUsername(username)
 
         if (getStaffByEmail) {
             if (!(getStaffByEmail.id === id)) {
-                throw new AppError("user already exists")
+                throw new AppError("Staff already exists")
             }
         }
 
-        if(getStaffByUsername){
-            if(!(getStaffByUsername.id === id)){
-                throw new AppError("user already exists")
+        if (getStaffByUsername) {
+            if (!(getStaffByUsername.id === id)) {
+                throw new AppError("Staff already exists")
             }
         }
 
@@ -66,11 +73,11 @@ export class StaffClass {
     async executeDeleteStaff(id: string): Promise<Staff> {
         const staffId = await this.staffRepository.getStaffById(id)
 
-        if(!staffId){
+        if (!staffId) {
             throw new AppError('staff dont exists')
         }
 
-        if(staffId.status === 0) {
+        if (staffId.status === 0) {
             throw new AppError('staff already deleted')
         }
 

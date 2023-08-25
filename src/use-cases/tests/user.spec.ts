@@ -1,8 +1,8 @@
 import { expect, describe, it, beforeEach } from 'vitest'
-import { UserClass } from './user'
+import { UserClass } from '../user'
 import { compare } from 'bcrypt'
-import { AppError } from '../errors/AppError'
-import { InMemoryUserRepository } from '../repositories/in-memory/in-memory-user-repository'
+import { AppError } from '../../errors/AppError'
+import { InMemoryUserRepository } from '../../repositories/in-memory/in-memory-user-repository'
 
 let usersRepository: InMemoryUserRepository
 let registerUseCase: UserClass

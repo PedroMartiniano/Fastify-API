@@ -5,6 +5,7 @@ import { createStaffController, editStaffController, getStaffById, deleteStaffCo
 import { createModuleController, editModuleController, getModuleByIdController, getModulesByCourseController } from "./controller/module";
 import { createTaskController, deleteTaskByIdController, getNextTaskController, getTaskByIdController, getTasksByIdModuleController } from "./controller/tasks";
 import { alumnAverageController, createAlumnAnswerController, getModuleAlumnAnswersController } from "./controller/alumnAnswers";
+import { cancelPurchaseController, createPurchaseController, getCoursePurchaseController, getPurchaseController, getUserPurchaseController } from "./controller/purchase";
 
 export const appRoutes = async (app: FastifyInstance) => {
     app.post('/user', createUserController)
@@ -39,4 +40,10 @@ export const appRoutes = async (app: FastifyInstance) => {
     app.post('/answer-task/:id_task', createAlumnAnswerController)
     app.post('/get-alumn-answers/:id_module', getModuleAlumnAnswersController)
     app.post('/alumn-average/:id_module', alumnAverageController)
+
+    app.post('/purchase/:id_course', createPurchaseController)
+    app.get('/purchase/:id_course/:id_user', getPurchaseController)
+    app.get('/purchase/course/:id_course', getCoursePurchaseController)
+    app.get('/purchase/user/:id_user', getUserPurchaseController)
+    app.delete('/purchase/:id', cancelPurchaseController)
 }

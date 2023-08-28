@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { makeTasksUseCase } from "../../use-cases/factory/make-task-use-case";
 import { AppError } from "../../errors/AppError";
+import { makeAlumnAnswerUseCase } from "../../use-cases/factory/make-AlumnAnswer-use-casae";
 
 export const createTaskController = async (req: FastifyRequest, rep: FastifyReply) => {
     const taskSchema = z.object({
@@ -83,4 +84,49 @@ export const getTasksByIdModuleController = async (req: FastifyRequest, rep: Fas
     }
 
     return rep.status(200).send(tasks)
+}
+
+export const getNextTaskController = async (req: FastifyRequest, rep: FastifyReply) => {
+    const idModuleSchema = z.object({
+        id_module: z.string()
+    })
+    const idUserSchema = z.object({
+        id_alumn: z.string()
+    })
+
+    const { id_module } = idModuleSchema.parse(req.params)
+    const { id_alumn } = idUserSchema.parse(req.body)
+
+    const taskUseCase = makeTasksUseCase()
+
+    let moduleTasks
+    try {
+        moduleTasks = await taskUseCase.getTaksByIdModule(id_module)
+    } catch (e) {
+        throw new AppError('something went wrong catching module tasks')
+    }
+
+    if (!moduleTasks) {
+        return rep.status(200).send({ message: "theres no tasks in this module" })
+    }
+
+    const alumnAnswersUseCase = makeAlumnAnswerUseCase()
+
+    console.log(moduleTasks)
+    let alumnAnswers
+    try {
+        alumnAnswers = await alumnAnswersUseCase.executeGetModuleAlumnAnswer(id_alumn, id_module)
+    } catch (e) {
+        console.log(`ERRO: ${e}`)
+        throw new AppError('something went wrong')
+    }
+
+    if (!alumnAnswers) {
+        return rep.status(200).send(moduleTasks[0])
+    }
+
+    if (moduleTasks[alumnAnswers.length]) {
+        return rep.status(200).send(moduleTasks[alumnAnswers.length])
+    }
+    return rep.status(200).send(null)
 }

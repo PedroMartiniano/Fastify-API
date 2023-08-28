@@ -3,7 +3,8 @@ import { createUserController, deleteUserController, editUserController, getAllU
 import { createCourseController, deleteCourseController, editCourseController, getAllCoursesController, getCourseByIdController } from "./controller/course";
 import { createStaffController, editStaffController, getStaffById, deleteStaffController, getAllStaffsController } from "./controller/staff";
 import { createModuleController, editModuleController, getModuleByIdController, getModulesByCourseController } from "./controller/module";
-import { createTaskController, deleteTaskByIdController, getTaskByIdController, getTasksByIdModuleController } from "./controller/tasks";
+import { createTaskController, deleteTaskByIdController, getNextTaskController, getTaskByIdController, getTasksByIdModuleController } from "./controller/tasks";
+import { createAlumnAnswerController, getModuleAlumnAnswersController } from "./controller/alumnAnswers";
 
 export const appRoutes = async (app: FastifyInstance) => {
     app.post('/user', createUserController)
@@ -33,4 +34,8 @@ export const appRoutes = async (app: FastifyInstance) => {
     app.get('/task/:id', getTaskByIdController)
     app.delete('/task/:id', deleteTaskByIdController)
     app.get('/tasks/:id_module', getTasksByIdModuleController)
+    app.post('/next-task/:id_module', getNextTaskController)
+
+    app.post('/answer-task/:id_task', createAlumnAnswerController)
+    app.post('/get-alumn-answers/:id_module', getModuleAlumnAnswersController)
 }

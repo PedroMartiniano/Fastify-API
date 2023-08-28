@@ -16,6 +16,8 @@ model User {
   username String @unique
   password String
   status   Int    @default(1)
+
+  alumnAnswers AlumnAnswer[]
 }
 
 model Staff {
@@ -36,30 +38,42 @@ model Course {
   price       Float
   status      Int    @default(1)
 
-  modules     Module[]
+  modules Module[]
 }
 
 model Module {
-  id          String @id @default(uuid())
+  id          String   @id @default(uuid())
   name        String
   description String
   createdAt   DateTime @default(now())
   id_course   String
-  status      Int     @default(1)
+  status      Int      @default(1)
 
-  course      Course @relation(fields: [id_course], references: [id])
-  tasks       Tasks[]
+  course Course  @relation(fields: [id_course], references: [id])
+  tasks  Tasks[]
 }
 
 model Tasks {
-  id            String @id @default(uuid())
-  question      String
-  answers       String
-  right_answer  String
-  id_module     String
-  createdAt     DateTime @default(now())
-  status        Int     @default(1)
+  id           String   @id @default(uuid())
+  question     String
+  answers      String
+  right_answer String
+  id_module    String
+  createdAt    DateTime @default(now())
+  status       Int      @default(1)
 
+  module       Module        @relation(fields: [id_module], references: [id])
+  alumnAnswers AlumnAnswer[]
+}
 
-  module        Module @relation(fields: [id_module], references: [id])
+model AlumnAnswer {
+  id           String   @id @default(uuid())
+  id_alumn     String
+  id_task      String
+  alumn_answer String
+  is_right     Boolean
+  answer_date  DateTime @default(now())
+
+  alumn User  @relation(fields: [id_alumn], references: [id])
+  task  Tasks @relation(fields: [id_task], references: [id])
 }

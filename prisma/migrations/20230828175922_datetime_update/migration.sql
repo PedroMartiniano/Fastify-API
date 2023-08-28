@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE `Purchase` MODIFY `purchase_date` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3);

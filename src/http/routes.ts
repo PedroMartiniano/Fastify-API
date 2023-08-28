@@ -4,7 +4,7 @@ import { createCourseController, deleteCourseController, editCourseController, g
 import { createStaffController, editStaffController, getStaffById, deleteStaffController, getAllStaffsController } from "./controller/staff";
 import { createModuleController, editModuleController, getModuleByIdController, getModulesByCourseController } from "./controller/module";
 import { createTaskController, deleteTaskByIdController, getNextTaskController, getTaskByIdController, getTasksByIdModuleController } from "./controller/tasks";
-import { createAlumnAnswerController, getModuleAlumnAnswersController } from "./controller/alumnAnswers";
+import { alumnAverageController, createAlumnAnswerController, getModuleAlumnAnswersController } from "./controller/alumnAnswers";
 
 export const appRoutes = async (app: FastifyInstance) => {
     app.post('/user', createUserController)
@@ -38,4 +38,5 @@ export const appRoutes = async (app: FastifyInstance) => {
 
     app.post('/answer-task/:id_task', createAlumnAnswerController)
     app.post('/get-alumn-answers/:id_module', getModuleAlumnAnswersController)
+    app.post('/alumn-average/:id_module', alumnAverageController)
 }

@@ -93,3 +93,30 @@ export const getModuleAlumnAnswersController = async (req: FastifyRequest, rep: 
 
     return rep.status(200).send(answers)
 }
+
+export const alumnAverageController = async (req: FastifyRequest, rep: FastifyReply) => {
+    const idAlumnSchema = z.object({
+        id_alumn: z.string()
+    })
+
+    const idModuleSchema = z.object({
+        id_module: z.string()
+    })
+
+    const { id_alumn } = idAlumnSchema.parse(req.body)
+    const { id_module } = idModuleSchema.parse(req.params)
+
+    const alumnAnswersUseCase = makeAlumnAnswerUseCase()
+
+    let alumnAnswers
+    try {
+        alumnAnswers = await alumnAnswersUseCase.executeGetModuleAlumnAnswer(id_alumn, id_module)
+    } catch (e) {
+        throw new AppError("something went wrong", 500)
+    }
+
+    let count = 0
+    alumnAnswers?.forEach((answer) => (answer.is_right) && (count++))
+
+    return rep.status(200).send({ Alumn_Average: `${count}/${alumnAnswers?.length}` })
+}

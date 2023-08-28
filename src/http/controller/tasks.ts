@@ -112,12 +112,10 @@ export const getNextTaskController = async (req: FastifyRequest, rep: FastifyRep
 
     const alumnAnswersUseCase = makeAlumnAnswerUseCase()
 
-    console.log(moduleTasks)
     let alumnAnswers
     try {
         alumnAnswers = await alumnAnswersUseCase.executeGetModuleAlumnAnswer(id_alumn, id_module)
     } catch (e) {
-        console.log(`ERRO: ${e}`)
         throw new AppError('something went wrong')
     }
 

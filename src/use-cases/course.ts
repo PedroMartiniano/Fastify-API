@@ -52,7 +52,7 @@ export class CourseClass {
 
     async executeDeleteCourse(id: string): Promise<Course> {
         const courseId: Course = await this.courseRepository.getCourseById(id)
-        
+
         if (!courseId) {
             throw new AppError('course dont exist', 404)
         }
@@ -64,6 +64,12 @@ export class CourseClass {
         const course: Course = await this.courseRepository.deleteCourse(id)
 
         return course
+    }
+
+    async executeMostBuyedCourses(): Promise<Course[]> {
+        const courses: Course[] = await this.courseRepository.mostBuyedCourses()
+
+        return courses
     }
 }
 

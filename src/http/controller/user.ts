@@ -97,5 +97,5 @@ export const deleteUserController = async (req: FastifyRequest, rep: FastifyRepl
         throw new AppError('something went wrong')
     }
 
-    return rep.status(200).send({user, message: 'deleted'})
+    return rep.status(200).send({ user, message: 'deleted' })
 }

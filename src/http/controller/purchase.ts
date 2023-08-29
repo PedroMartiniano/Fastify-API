@@ -13,8 +13,19 @@ export const createPurchaseController = async (req: FastifyRequest, rep: Fastify
 
     const { id_user } = purchaseSchema.parse(req.body)
     const { id_course } = idCourseSchema.parse(req.params)
-    
+
     const createPurchaseUseCase = makePurchaseUseCase()
+
+    let userAlreadyBuyed
+    try {
+        userAlreadyBuyed = await createPurchaseUseCase.executeGetPurchase({ id_user, id_course })
+    } catch (e) {
+        throw new AppError('something went wrong')
+    }
+
+    if (userAlreadyBuyed) {
+        throw new AppError('User Already buyed this course')
+    }
 
     let purchaseCreate
     try {
@@ -32,8 +43,9 @@ export const getPurchaseController = async (req: FastifyRequest, rep: FastifyRep
         id_user: z.string()
     })
     const { id_course, id_user } = idSchema.parse(req.params)
-    
+
     const getPurchaseUseCase = makePurchaseUseCase()
+
     let purchaseGet
     try {
         purchaseGet = await getPurchaseUseCase.executeGetPurchase({ id_user, id_course })
@@ -50,12 +62,12 @@ export const getCoursePurchaseController = async (req: FastifyRequest, rep: Fast
     })
 
     const { id_course } = idCourseSchema.parse(req.params)
-    
+
     const getCoursePurchaseUseCase = makePurchaseUseCase()
 
     let purchaseGet
     try {
-        purchaseGet = await getCoursePurchaseUseCase.executeGetCoursePurchase( id_course )
+        purchaseGet = await getCoursePurchaseUseCase.executeGetCoursePurchase(id_course)
     } catch (e: any) {
         throw new AppError(`${e.message}`, 400)
     }
@@ -69,12 +81,12 @@ export const getUserPurchaseController = async (req: FastifyRequest, rep: Fastif
     })
 
     const { id_user } = idUserSchema.parse(req.params)
-    
+
     const getUserPurchaseUseCase = makePurchaseUseCase()
 
     let purchaseGet
     try {
-        purchaseGet = await getUserPurchaseUseCase.executeGetUserPurchase( id_user )
+        purchaseGet = await getUserPurchaseUseCase.executeGetUserPurchase(id_user)
     } catch (e: any) {
         throw new AppError(`${e.message}`, 400)
     }
@@ -93,7 +105,7 @@ export const cancelPurchaseController = async (req: FastifyRequest, rep: Fastify
     let cancelPurchase
     try {
         cancelPurchase = await cancelPurchaseUseCase.executeCancelPurchase(id)
-    }catch (e: any) {
+    } catch (e: any) {
         throw new AppError(`${e.message}`, 400)
     }
 

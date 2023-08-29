@@ -1,8 +1,9 @@
-import { FastifyReply, FastifyRequest } from "fastify"
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
 import { z } from 'zod'
 import { AppError } from "../../errors/AppError"
 import { makeCourseUseCase } from "../../use-cases/factory/make-course-use-case"
 import { makeModuleUseCase } from "../../use-cases/factory/make-module-use-case"
+import { makePurchaseUseCase } from "../../use-cases/factory/make-purchase-use-case"
 
 export const createCourseController = async (request: FastifyRequest, reply: FastifyReply) => {
 
@@ -54,7 +55,7 @@ export const getAllCoursesController = async (req: FastifyRequest, rep: FastifyR
         throw new AppError(`${e}`, 409)
     }
 
-    return rep.status(200).send({courses})
+    return rep.status(200).send({ courses })
 }
 
 export const editCourseController = async (req: FastifyRequest, rep: FastifyReply) => {
@@ -111,4 +112,45 @@ export const deleteCourseController = async (req: FastifyRequest, rep: FastifyRe
     }
 
     return rep.status(200).send({ course, message: "deleted" })
+}
+
+export const mostBuyedCoursesController = async (req: FastifyRequest, rep: FastifyReply) => {
+    const getCourses = makeCourseUseCase()
+
+    let courses
+    try {
+        courses = await getCourses.executeMostBuyedCourses()
+    } catch (e) {
+        throw new AppError("something went wrong", 500)
+    }
+
+    return rep.status(200).send(courses)
+}
+
+export const ratingController = async (req: FastifyRequest, rep: FastifyReply) => {
+    const idCourseSchema = z.object({
+        id_course: z.string()
+    })
+
+    const bodySchema = z.object({
+        id_user: z.string(),
+        rating: z.number()
+    })
+
+    const { id_course } = idCourseSchema.parse(req.params)
+    const { id_user, rating } = bodySchema.parse(req.body)
+
+    const getUserPurchase = makePurchaseUseCase()
+
+    let userPurchase
+    try {
+        userPurchase = await getUserPurchase.executeGetPurchase({ id_user, id_course })
+    } catch (e) {
+        throw new AppError('Something went wrong')
+    }
+
+    if (!userPurchase) {
+        throw new AppError('User didnt buyed this course')
+    }
+
 }

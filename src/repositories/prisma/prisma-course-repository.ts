@@ -74,10 +74,34 @@ export class PrismaCourseRepository implements CourseRepository {
 
         return courses
     }
-    
-    // async ratingCourse(id_user: string, id_course: string, rating: number): Promise<Course> {
-    //     const allRates = await prisma.course.findMany({
 
-    //     })
-    // }
+    async ratingCourse(id_course: string, rating: number): Promise<Course | null> {
+        const lastRating = await prisma.course.findUnique({
+            where: {
+                id: id_course
+            },
+            select: {
+                rating: true,
+                qtdeRating: true
+            }
+        })
+
+        if (!lastRating) {
+            return null
+        }
+
+        let average: number = ((lastRating.rating * lastRating.qtdeRating) + rating) / (lastRating.qtdeRating + 1)
+
+        const newAverage = await prisma.course.update({
+            where: {
+                id: id_course
+            },
+            data: {
+                rating: average,
+                qtdeRating: lastRating.qtdeRating + 1
+            }
+        })
+
+        return newAverage
+    }
 }

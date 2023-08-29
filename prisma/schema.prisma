@@ -18,7 +18,7 @@ model User {
   status   Int    @default(1)
 
   alumnAnswers AlumnAnswer[]
-  purchase      Purchase[]
+  purchase     Purchase[]
 }
 
 model Staff {
@@ -35,12 +35,13 @@ model Course {
   name        String
   description String
   rating      Float  @default(0.0)
+  qtdeRating  Int    @default(0)
   image       String
   price       Float
   status      Int    @default(1)
 
-  modules Module[]
-  purchase      Purchase[]
+  modules  Module[]
+  purchase Purchase[]
 }
 
 model Module {
@@ -81,12 +82,12 @@ model AlumnAnswer {
 }
 
 model Purchase {
-  id            String    @id @default(uuid())
+  id            String   @id @default(uuid())
   id_user       String
   id_course     String
-  purchase_date DateTime  @default(now())
-  status        Int       @default(1)
+  purchase_date DateTime @default(now())
+  status        Int      @default(1)
 
-  user          User     @relation(fields: [id_user], references: [id])
-  course        Course    @relation(fields: [id_course], references: [id])
+  user   User   @relation(fields: [id_user], references: [id])
+  course Course @relation(fields: [id_course], references: [id])
 }

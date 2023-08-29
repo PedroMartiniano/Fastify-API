@@ -71,5 +71,11 @@ export class CourseClass {
 
         return courses
     }
+
+    async executeRatingCourse(id_course: string, rating: number): Promise<Course | null> {
+        const course: Course = await this.courseRepository.ratingCourse(id_course, rating)
+
+        return course
+    }
 }
 

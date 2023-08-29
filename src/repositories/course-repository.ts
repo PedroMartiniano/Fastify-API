@@ -7,5 +7,5 @@ export interface CourseRepository {
     editCourse(data: Prisma.CourseCreateInput, id: string): Promise<Course | null>
     deleteCourse(id: string): Promise<Course>
     mostBuyedCourses(): Promise<Course[]>
-    // ratingCourse(id_user: string, id_course: string, rating: number): Promise<Course>
+    ratingCourse(id_course: string, rating: number): Promise<Course | null>
 }

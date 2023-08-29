@@ -153,4 +153,15 @@ export const ratingController = async (req: FastifyRequest, rep: FastifyReply) =
         throw new AppError('User didnt buyed this course')
     }
 
+
+    const courseUseCase = makeCourseUseCase()
+
+    let course
+    try {
+        course = await courseUseCase.executeRatingCourse(id_course, rating)
+    } catch (e) {
+        throw new AppError('Something went wrong')
+    }
+
+    return rep.status(200).send({ course, message: 'course rating updated' })
 }

@@ -62,18 +62,18 @@ export const editUserController = async (req: FastifyRequest, rep: FastifyReply)
     })
 
     const idSchema = z.object({
-        id: z.string()
+        sub: z.string()
     })
 
     const { email, username } = userSchema.parse(req.body)
-    const { id } = idSchema.parse(req.params)
+    const { sub } = idSchema.parse(req.user)
 
     const editUser = makeUserUseCase()
 
     let user
 
     try {
-        user = await editUser.executeEditUser({ id, email, username })
+        user = await editUser.executeEditUser({ sub, email, username })
     } catch (e) {
         throw new AppError(`algo deu errado`, 400)
     }
@@ -83,16 +83,16 @@ export const editUserController = async (req: FastifyRequest, rep: FastifyReply)
 
 export const deleteUserController = async (req: FastifyRequest, rep: FastifyReply) => {
     const idSchema = z.object({
-        id: z.string()
+        sub: z.string()
     })
 
-    const { id } = idSchema.parse(req.params)
+    const { sub } = idSchema.parse(req.user)
 
     const deleteUser = makeUserUseCase()
 
     let user
     try {
-        user = await deleteUser.executeDeleteUser(id)
+        user = await deleteUser.executeDeleteUser(sub)
     } catch (e) {
         throw new AppError('something went wrong')
     }

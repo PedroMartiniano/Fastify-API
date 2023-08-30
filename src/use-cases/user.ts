@@ -9,7 +9,7 @@ interface CreateUserRequest {
     password: string
 }
 interface EditUserRequest {
-    id: string
+    sub: string
     email: string,
     username: string,
 }
@@ -51,9 +51,9 @@ export class UserClass {
         return users
     }
 
-    async executeEditUser({ id, email, username }: EditUserRequest): Promise<UserResponse | null> {
+    async executeEditUser({ sub, email, username }: EditUserRequest): Promise<UserResponse | null> {
 
-        const userExist = await this.userRepository.getUserById(id)
+        const userExist = await this.userRepository.getUserById(sub)
 
         if (!userExist) {
             throw new AppError('User not found')
@@ -66,12 +66,12 @@ export class UserClass {
         const userEmail = await this.userRepository.getUserByEmail(email)
 
         if (userEmail) {
-            if (!(userEmail.id === id)) {
+            if (!(userEmail.id === sub)) {
                 throw new AppError('Email already exists')
             }
         }
 
-        const user = await this.userRepository.editUser(id, email, username)
+        const user = await this.userRepository.editUser(sub, email, username)
 
         if (!user) {
             return null
@@ -96,7 +96,7 @@ export class UserClass {
         return user
     }
 
-    async executeGetMe({userId}: UserGetMeRequest): Promise<User> {
+    async executeGetMe({ userId }: UserGetMeRequest): Promise<User> {
         const user = await this.userRepository.getUserById(userId)
 
         if (!user) {

@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE `Course` ADD COLUMN `qtdeRating` INTEGER NOT NULL DEFAULT 0;

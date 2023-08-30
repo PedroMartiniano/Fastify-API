@@ -1,18 +1,26 @@
 import { FastifyInstance } from "fastify";
-import { createUserController, deleteUserController, editUserController, getAllUsersController, getUserByIdController } from "./controller/user";
+import { createUserController, deleteUserController, editUserController, getAllUsersController, getUserByIdController, profileController } from "./controller/user";
 import { createCourseController, deleteCourseController, editCourseController, getAllCoursesController, getCourseByIdController, mostBuyedCoursesController, ratingController } from "./controller/course";
 import { createStaffController, editStaffController, getStaffById, deleteStaffController, getAllStaffsController } from "./controller/staff";
 import { createModuleController, editModuleController, getModuleByIdController, getModulesByCourseController } from "./controller/module";
 import { createTaskController, deleteTaskByIdController, getNextTaskController, getTaskByIdController, getTasksByIdModuleController } from "./controller/tasks";
 import { alumnAverageController, createAlumnAnswerController, getModuleAlumnAnswersController } from "./controller/alumnAnswers";
 import { cancelPurchaseController, createPurchaseController, getCoursePurchaseController, getPurchaseController, getUserPurchaseController } from "./controller/purchase";
+import { authController } from "./controller/auth";
+import { verifyJwt } from "./middlewares/verify-jwt";
+import { refreshToken } from "./controller/refresh";
+import { verifyRole } from "./middlewares/verify-role";
 
 export const appRoutes = async (app: FastifyInstance) => {
+    // app.addHook('onRequest', verifyJwt)
     app.post('/user', createUserController)
     app.get('/user/:id', getUserByIdController)
     app.get('/users', getAllUsersController)
-    app.put('/user/:id', editUserController)
+    app.put('/user/:id', { onRequest: [verifyJwt, verifyRole('ADMIN')] }, editUserController)
     app.delete('/user/:id', deleteUserController)
+    app.post('/user/login', authController)
+    app.get('/user/get-me', { onRequest: [verifyJwt] }, profileController)
+    app.patch('/token/refresh', refreshToken)
 
     app.post('/staff', createStaffController)
     app.get('/staff/:id', getStaffById)

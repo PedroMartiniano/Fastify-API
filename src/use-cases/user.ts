@@ -18,6 +18,10 @@ interface UserResponse {
     user: User
 }
 
+interface UserGetMeRequest {
+    userId: string
+}
+
 export class UserClass {
     constructor(private userRepository: UserRepository) { }
 
@@ -88,6 +92,16 @@ export class UserClass {
         }
 
         const user = await this.userRepository.deleteUser(id)
+
+        return user
+    }
+
+    async executeGetMe({userId}: UserGetMeRequest): Promise<User> {
+        const user = await this.userRepository.getUserById(userId)
+
+        if (!user) {
+            throw new AppError('User not found')
+        }
 
         return user
     }

@@ -1,4 +1,4 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
+import { FastifyReply, FastifyRequest } from "fastify"
 import { z } from 'zod'
 import { AppError } from "../../errors/AppError"
 import { makeCourseUseCase } from "../../use-cases/factory/make-course-use-case"

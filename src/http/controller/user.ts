@@ -99,3 +99,20 @@ export const deleteUserController = async (req: FastifyRequest, rep: FastifyRepl
 
     return rep.status(200).send({ user, message: 'deleted' })
 }
+
+export const profileController = async (req: FastifyRequest, rep: FastifyReply) => {
+    const userUseCase = makeUserUseCase()
+
+    try {
+        const user = await userUseCase.executeGetMe({ userId: req.user.sub })
+
+        return rep.status(201).send({
+            user: {
+                ...user,
+                password: undefined
+            }
+        })
+    } catch (e: any) {
+        throw new AppError(e.message)
+    }
+}

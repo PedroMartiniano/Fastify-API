@@ -3,6 +3,8 @@ CREATE TABLE `User` (
     `id` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
     `username` VARCHAR(191) NOT NULL,
+    `first_name` VARCHAR(191) NOT NULL,
+    `last_name` VARCHAR(191) NOT NULL,
     `password` VARCHAR(191) NOT NULL,
     `role` ENUM('ADMIN', 'MEMBER') NOT NULL DEFAULT 'MEMBER',
     `status` INTEGER NOT NULL DEFAULT 1,
@@ -18,6 +20,7 @@ CREATE TABLE `Staff` (
     `cpf` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
     `username` VARCHAR(191) NOT NULL,
+    `role` ENUM('ADMIN', 'MEMBER') NOT NULL DEFAULT 'ADMIN',
     `password` VARCHAR(191) NOT NULL,
     `status` INTEGER NOT NULL DEFAULT 1,
 
@@ -36,6 +39,7 @@ CREATE TABLE `Course` (
     `qtdeRating` INTEGER NOT NULL DEFAULT 0,
     `image` VARCHAR(191) NOT NULL,
     `price` DOUBLE NOT NULL,
+    `id_staff` VARCHAR(191) NOT NULL,
     `status` INTEGER NOT NULL DEFAULT 1,
 
     PRIMARY KEY (`id`)
@@ -48,7 +52,19 @@ CREATE TABLE `Module` (
     `description` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `id_course` VARCHAR(191) NOT NULL,
+    `id_staff` VARCHAR(191) NOT NULL,
     `status` INTEGER NOT NULL DEFAULT 1,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Class` (
+    `id` VARCHAR(191) NOT NULL,
+    `name` VARCHAR(191) NOT NULL,
+    `description` VARCHAR(191) NULL,
+    `link` VARCHAR(191) NOT NULL,
+    `id_module` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -90,7 +106,16 @@ CREATE TABLE `Purchase` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
+ALTER TABLE `Course` ADD CONSTRAINT `Course_id_staff_fkey` FOREIGN KEY (`id_staff`) REFERENCES `Staff`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Module` ADD CONSTRAINT `Module_id_staff_fkey` FOREIGN KEY (`id_staff`) REFERENCES `Staff`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `Module` ADD CONSTRAINT `Module_id_course_fkey` FOREIGN KEY (`id_course`) REFERENCES `Course`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Class` ADD CONSTRAINT `Class_id_module_fkey` FOREIGN KEY (`id_module`) REFERENCES `Module`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Tasks` ADD CONSTRAINT `Tasks_id_module_fkey` FOREIGN KEY (`id_module`) REFERENCES `Module`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

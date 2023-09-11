@@ -6,20 +6,21 @@ import { AppError } from "../../errors/AppError";
 export const createModuleController = async (req: FastifyRequest, rep: FastifyReply) => {
     const moduleSchema = z.object({
         name: z.string(),
-        description: z.string()
+        description: z.string(),
+        id_staff: z.string()
     })
     const idCourseSchema = z.object({
         id_course: z.string()
     })
 
-    const { name, description } = moduleSchema.parse(req.body)
+    const { name, description, id_staff } = moduleSchema.parse(req.body)
     const { id_course } = idCourseSchema.parse(req.params)
 
     const createModuleUseCase = makeModuleUseCase()
 
     let moduleCreate
     try {
-        moduleCreate = await createModuleUseCase.executeCreateModule({ name, description, id_course })
+        moduleCreate = await createModuleUseCase.executeCreateModule({ name, description, id_course, id_staff })
     } catch (e) {
         throw new AppError('something went wrong', 400)
     }
@@ -85,6 +86,19 @@ export const getModulesByCourseController = async (req: FastifyRequest, rep: Fas
     try {
         modules = await getModulesByCourseUseCase.executeGetModuleByCourse(id_course)
     } catch (e) {
+        throw new AppError('Something went wrong', 400)
+    }
+
+    return rep.status(200).send(modules)
+}
+
+export const moduleGetController = async (req: FastifyRequest, rep: FastifyReply) => {
+    const getModulesUseCase = makeModuleUseCase()
+
+    let modules
+    try {
+        modules = await getModulesUseCase.executeGetModulesModified()
+    } catch {
         throw new AppError('Something went wrong', 400)
     }
 

@@ -2,21 +2,25 @@ import { FastifyReply, FastifyRequest } from "fastify"
 import { z } from 'zod'
 import { AppError } from "../../errors/AppError"
 import { makeUserUseCase } from "../../use-cases/factory/make-user-use-case"
+import fs from 'fs/promises'
+import path from 'path'
 
 export const createUserController = async (request: FastifyRequest, reply: FastifyReply) => {
 
     const userSchema = z.object({
         email: z.string().email(),
+        first_name: z.string(),
+        last_name: z.string(),
         username: z.string(),
         password: z.string().min(6)
     })
 
-    const { email, username, password } = userSchema.parse(request.body)
+    const { email, username, first_name, last_name, password } = userSchema.parse(request.body)
 
     const createUser = makeUserUseCase()
 
     try {
-        await createUser.executeCreateUser({ email, username, password })
+        await createUser.executeCreateUser({ email, username, first_name, last_name, password })
     } catch (e) {
         throw new AppError(`Algo deu errado`, 409)
     }
@@ -115,4 +119,8 @@ export const profileController = async (req: FastifyRequest, rep: FastifyReply) 
     } catch (e: any) {
         throw new AppError(e.message)
     }
+}
+
+export const uploadImageController = async (req: FastifyRequest, rep: FastifyReply) => {
+    return rep.status(200).send('image uploaded')
 }

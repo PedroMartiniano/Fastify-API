@@ -1,12 +1,23 @@
 import { Course, Prisma } from "@prisma/client";
 import prisma from "../../lib/prisma";
 import { CourseRepository } from "../course-repository";
+import { CreateCourseProps } from "../../@types/create-course";
 
 export class PrismaCourseRepository implements CourseRepository {
-    async create(data: Prisma.CourseCreateInput) {
+    async create(data: CreateCourseProps) {
+
+        const { name, description, image, price, id_staff } = data
+
         const course = await prisma.course.create({
-            data
+            data: {
+                name,
+                description,
+                image,
+                price,
+                id_staff
+            }
         })
+
         return course
     }
 

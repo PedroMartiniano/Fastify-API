@@ -11,15 +11,16 @@ export const createCourseController = async (request: FastifyRequest, reply: Fas
         name: z.string(),
         description: z.string(),
         image: z.string(),
-        price: z.number()
+        price: z.number(),
+        id_staff: z.string()
     })
 
-    const { name, description, image, price } = courseSchema.parse(request.body)
+    const { name, description, image, price, id_staff } = courseSchema.parse(request.body)
 
     const createPost = makeCourseUseCase()
 
     try {
-        await createPost.executeCreateCourse({ name, description, image, price })
+        await createPost.executeCreateCourse({ name, description, image, price }, id_staff)
     } catch (e) {
         throw new AppError(`${e}`, 409)
     }

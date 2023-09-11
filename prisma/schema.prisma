@@ -16,12 +16,15 @@ enum Role {
 }
 
 model User {
-  id       String @id @default(uuid())
-  email    String @unique
-  username String @unique
-  password String
-  role     Role   @default(MEMBER)
-  status   Int    @default(1)
+  id         String @id @default(uuid())
+  email      String @unique
+  username   String @unique
+  first_name String
+  last_name  String
+  password   String
+
+  role   Role @default(MEMBER)
+  status Int  @default(1)
 
   alumnAnswers AlumnAnswer[]
   purchase     Purchase[]
@@ -32,8 +35,12 @@ model Staff {
   cpf      String @unique
   email    String @unique
   username String @unique
+  role     Role   @default(ADMIN)
   password String
   status   Int    @default(1)
+
+  Course Course[]
+  Module Module[]
 }
 
 model Course {
@@ -44,8 +51,10 @@ model Course {
   qtdeRating  Int    @default(0)
   image       String
   price       Float
+  id_staff    String
   status      Int    @default(1)
 
+  staff    Staff      @relation(fields: [id_staff], references: [id])
   modules  Module[]
   purchase Purchase[]
 }
@@ -56,10 +65,23 @@ model Module {
   description String
   createdAt   DateTime @default(now())
   id_course   String
+  id_staff    String
   status      Int      @default(1)
 
+  staff  Staff   @relation(fields: [id_staff], references: [id])
   course Course  @relation(fields: [id_course], references: [id])
   tasks  Tasks[]
+  Class  Class[]
+}
+
+model Class {
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+  link        String
+  id_module   String
+
+  module Module @relation(fields: [id_module], references: [id])
 }
 
 model Tasks {

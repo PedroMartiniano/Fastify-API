@@ -2,6 +2,7 @@ import { Module, Prisma } from "@prisma/client";
 import { ModuleRepository } from "../module-repository";
 import prisma from "../../lib/prisma";
 import { AppError } from "../../errors/AppError";
+import { ModuleGet } from "../../@types/module-get";
 
 export class PrismaModuleRepository implements ModuleRepository {
     async createModule(data: Prisma.ModuleUncheckedCreateInput): Promise<Module> {
@@ -48,7 +49,7 @@ export class PrismaModuleRepository implements ModuleRepository {
             }
         })
 
-        if(deleteModule){
+        if (deleteModule) {
             return true
         }
 
@@ -66,5 +67,35 @@ export class PrismaModuleRepository implements ModuleRepository {
         })
 
         return modules
+    }
+
+    async getAllModulesModified(): Promise<ModuleGet[] | null> {
+        try {
+            const modules = await prisma.module.findMany({
+                select: {
+                    name: true,
+                    description: true,
+                    course: {
+                        select: {
+                            name: true
+                        }
+                    },
+                    staff: {
+                        select: {
+                            username: true
+                        }
+                    }
+                }
+            })
+
+
+            const modulesRenamed = modules.map(mod => {
+                return { name: mod.name, description: mod.description, courseName: mod.course.name, staffName: mod.staff.username }
+            })
+
+            return modulesRenamed
+        } catch {
+            return null
+        }
     }
 }

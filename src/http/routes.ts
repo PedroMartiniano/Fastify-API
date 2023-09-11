@@ -15,7 +15,7 @@ import { createClassController } from "./controller/class";
 
 export const appRoutes = async (app: FastifyInstance) => {
     // app.addHook('onRequest', verifyJwt)
-    app.post('/user', createUserController)
+    app.post('/user', { preHandler: upload.single('profile') }, createUserController)
     app.post('/user/image', { preHandler: upload.single('profile') }, uploadImageController)
     app.get('/user/:id', getUserByIdController)
     app.get('/users', getAllUsersController)
@@ -31,7 +31,7 @@ export const appRoutes = async (app: FastifyInstance) => {
     app.delete('/staff/:id', deleteStaffController)
     app.get('/staffs', getAllStaffsController)
 
-    app.post('/course', createCourseController)
+    app.post('/course', { preHandler: upload.single('course') }, createCourseController)
     app.get('/course/:id', getCourseByIdController)
     app.get('/courses', getAllCoursesController)
     app.put('/course/:id', editCourseController)

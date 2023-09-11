@@ -15,12 +15,14 @@ export const createUserController = async (request: FastifyRequest, reply: Fasti
         password: z.string().min(6)
     })
 
+    let { filename: image } = (request as any).file
+
     const { email, username, first_name, last_name, password } = userSchema.parse(request.body)
 
     const createUser = makeUserUseCase()
 
     try {
-        await createUser.executeCreateUser({ email, username, first_name, last_name, password })
+        await createUser.executeCreateUser({ email, username, first_name, last_name, image, password })
     } catch (e) {
         throw new AppError(`Algo deu errado`, 409)
     }
@@ -122,5 +124,7 @@ export const profileController = async (req: FastifyRequest, rep: FastifyReply) 
 }
 
 export const uploadImageController = async (req: FastifyRequest, rep: FastifyReply) => {
+
+    const file = (req as any).file
     return rep.status(200).send('image uploaded')
 }

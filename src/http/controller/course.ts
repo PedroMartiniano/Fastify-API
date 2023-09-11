@@ -10,12 +10,13 @@ export const createCourseController = async (request: FastifyRequest, reply: Fas
     const courseSchema = z.object({
         name: z.string(),
         description: z.string(),
-        image: z.string(),
         price: z.number(),
         id_staff: z.string()
     })
 
-    const { name, description, image, price, id_staff } = courseSchema.parse(request.body)
+    const { filename: image } = (request as any).file
+
+    const { name, description, price, id_staff } = courseSchema.parse(request.body)
 
     const createPost = makeCourseUseCase()
 

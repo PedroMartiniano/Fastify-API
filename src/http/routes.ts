@@ -15,7 +15,43 @@ import { createClassController } from "./controller/class";
 
 export const appRoutes = async (app: FastifyInstance) => {
     // app.addHook('onRequest', verifyJwt)
-    app.post('/user', { preHandler: upload.single('profile') }, createUserController)
+    app.post('/user', {
+        schema: {
+            tags: ["Default"],
+            description: 'Should create an user',
+            body: {
+                type: 'object',
+                properties: {
+                    email: { type: 'string' },
+                    first_name: { type: 'string' },
+                    last_name: { type: 'string' },
+                    username: { type: 'string' },
+                    password: { type: 'string' }
+                }
+            },
+            response: {
+                201: {
+                    description: 'Successful response',
+                    type: 'object',
+                    properties: {
+                        success: { type: 'boolean', example: true },
+                        data: { type: 'object', example: {
+                            email: 'user@email.com',
+                            first_name: 'John',
+                            last_name: 'Doe',
+                            username: 'username',
+                            password: '123456'
+                        }}
+                    }
+                },
+                409: {
+                    description: 'Error Response',
+                    type: 'string',
+                    example: 'Algo deu errado'
+                }
+            }
+        },
+    }, createUserController)
     app.post('/user/image', { preHandler: upload.single('profile') }, uploadImageController)
     app.get('/user/:id', getUserByIdController)
     app.get('/users', getAllUsersController)

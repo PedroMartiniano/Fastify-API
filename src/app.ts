@@ -8,6 +8,9 @@ import fastifyJwt from "@fastify/jwt"
 import fastifyCookie from "@fastify/cookie"
 import multer from "fastify-multer"
 import { storage } from "./multer"
+import fastifySwagger from "@fastify/swagger"
+import fastifySwaggerUi from "@fastify/swagger-ui";
+import { swaggerOptions, swaggerUiOptions } from "./swagger"
 
 const app = fastify()
 
@@ -44,6 +47,9 @@ app.register(fastifyJwt, {
 app.register(fastifyCookie)
 
 app.register(cors)
+
+app.register(fastifySwagger, swaggerOptions)
+app.register(fastifySwaggerUi, swaggerUiOptions)
 
 app.register(appRoutes)
 

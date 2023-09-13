@@ -28,7 +28,7 @@ interface UserGetMeRequest {
 export class UserClass {
     constructor(private userRepository: UserRepository) { }
 
-    async executeCreateUser({ email, username, first_name, last_name, image, password }: CreateUserRequest): Promise<UserResponse> {
+    async executeCreateUser({ email, username, first_name, last_name, image, password }: CreateUserRequest): Promise<User> {
 
         const userWithSameEmail = await this.userRepository.getUserByEmail(email)
         const userWithSameUsername = await this.userRepository.getUserByUsername(username)
@@ -38,9 +38,9 @@ export class UserClass {
         }
 
         const hashPassword = await hash(password, 4)
-
         const user = await this.userRepository.create({ email, username, first_name, last_name, image, password: hashPassword })
-        return { user }
+        
+        return user 
     }
 
     async executeGetUserById(id: string): Promise<User | null> {

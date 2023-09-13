@@ -2,8 +2,6 @@ import { FastifyReply, FastifyRequest } from "fastify"
 import { z } from 'zod'
 import { AppError } from "../../errors/AppError"
 import { makeUserUseCase } from "../../use-cases/factory/make-user-use-case"
-import fs from 'fs/promises'
-import path from 'path'
 
 export const createUserController = async (request: FastifyRequest, reply: FastifyReply) => {
 
@@ -11,23 +9,23 @@ export const createUserController = async (request: FastifyRequest, reply: Fasti
         email: z.string().email(),
         first_name: z.string(),
         last_name: z.string(),
+        image: z.string().default('will-be-replaced'),
         username: z.string(),
         password: z.string().min(6)
     })
 
-    let { filename: image } = (request as any).file
-
-    const { email, username, first_name, last_name, password } = userSchema.parse(request.body)
+    const { email, username, first_name, last_name, image, password } = userSchema.parse(request.body)
 
     const createUser = makeUserUseCase()
 
+    let user
     try {
-        await createUser.executeCreateUser({ email, username, first_name, last_name, image, password })
+        user = await createUser.executeCreateUser({ email, username, first_name, last_name, image, password })
     } catch (e) {
         throw new AppError(`Algo deu errado`, 409)
     }
 
-    return reply.status(201).send('created')
+    return reply.status(201).send({ success: true, data: user }) // não estou conseguindo retornar o user
 }
 
 export const getUserByIdController = async (req: FastifyRequest, rep: FastifyReply) => {
@@ -125,6 +123,9 @@ export const profileController = async (req: FastifyRequest, rep: FastifyReply) 
 
 export const uploadImageController = async (req: FastifyRequest, rep: FastifyReply) => {
 
-    const file = (req as any).file
+    let { filename: image } = (req as any).file
+
+    console.log(image)
+
     return rep.status(200).send('image uploaded')
 }

@@ -10,22 +10,23 @@ export const createCourseController = async (request: FastifyRequest, reply: Fas
     const courseSchema = z.object({
         name: z.string(),
         description: z.string(),
+        image: z.string().default('will-be-replaced'),
         price: z.number(),
         id_staff: z.string()
     })
 
-    const { filename: image } = (request as any).file
-
-    const { name, description, price, id_staff } = courseSchema.parse(request.body)
+    const { name, description, image, price, id_staff } = courseSchema.parse(request.body)
 
     const createPost = makeCourseUseCase()
 
+    let course
     try {
-        await createPost.executeCreateCourse({ name, description, image, price }, id_staff)
+        course = await createPost.executeCreateCourse({ name, description, image, price }, id_staff)
     } catch (e) {
         throw new AppError(`${e}`, 409)
     }
-    return reply.status(201).send('created')
+
+    return reply.status(201).send(course)
 }
 
 export const getCourseByIdController = async (req: FastifyRequest, rep: FastifyReply) => {
@@ -166,4 +167,25 @@ export const ratingController = async (req: FastifyRequest, rep: FastifyReply) =
     }
 
     return rep.status(200).send({ course, message: 'course rating updated' })
+}
+
+export const updateImageCourseController = async (req: FastifyRequest, rep: FastifyReply) => {
+    const idCourseSchema = z.object({
+        id: z.string()
+    })
+
+    const { id } = idCourseSchema.parse(req.params)
+
+    const { filename: image } = (req as any).file
+
+    const updateImageUseCase = makeCourseUseCase()
+
+    let course
+    try {
+        course = await updateImageUseCase.executeUpdateImage(id, image)
+    } catch {
+        throw new AppError('something went wrong')
+    }
+
+    return rep.status(200).send(course)
 }

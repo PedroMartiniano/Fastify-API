@@ -77,5 +77,11 @@ export class CourseClass {
 
         return course
     }
+
+    async executeUpdateImage(id: string, image: string): Promise<Course> {
+        const course: Course = await this.courseRepository.updateImage(id, image)
+
+        return course
+    }
 }
 

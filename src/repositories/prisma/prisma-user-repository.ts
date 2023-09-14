@@ -1,5 +1,5 @@
 import prisma from "../../lib/prisma";
-import { Prisma } from "@prisma/client";
+import { $Enums, Prisma } from "@prisma/client";
 import { UserRepository } from "../user-repository";
 
 export class PrismaUserRepository implements UserRepository {
@@ -72,5 +72,18 @@ export class PrismaUserRepository implements UserRepository {
         })
 
         return user
+    }
+
+    async updateImage(id: string, image: string) {
+        const userImageUpdated = await prisma.user.update({
+            where: {
+                id
+            },
+            data: {
+                image
+            }
+        })
+
+        return userImageUpdated
     }
 }

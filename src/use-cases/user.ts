@@ -39,8 +39,8 @@ export class UserClass {
 
         const hashPassword = await hash(password, 4)
         const user = await this.userRepository.create({ email, username, first_name, last_name, image, password: hashPassword })
-        
-        return user 
+
+        return user
     }
 
     async executeGetUserById(id: string): Promise<User | null> {
@@ -105,6 +105,12 @@ export class UserClass {
         if (!user) {
             throw new AppError('User not found')
         }
+
+        return user
+    }
+
+    async executeUpdateImage(id: string, image: string): Promise<User> {
+        const user = await this.userRepository.updateImage(id, image)
 
         return user
     }

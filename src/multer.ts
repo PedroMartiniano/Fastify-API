@@ -1,6 +1,4 @@
 import multer from "fastify-multer"
-import { AppError } from "./errors/AppError"
-import { FastifyRequest } from "fastify"
 
 export const storage = multer.diskStorage({
     destination: (req, file, cb) => {

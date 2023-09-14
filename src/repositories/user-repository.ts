@@ -8,4 +8,5 @@ export interface UserRepository {
     getAllUsers(): Promise<User[] | null>
     editUser(id: string, email: string, username: string): Promise<User | null>
     deleteUser(id: string): Promise<User>
+    updateImage(id: string, image: string): Promise<User>
 }

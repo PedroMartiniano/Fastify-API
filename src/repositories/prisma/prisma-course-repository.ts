@@ -115,4 +115,17 @@ export class PrismaCourseRepository implements CourseRepository {
 
         return newAverage
     }
+
+    async updateImage(id: string, image: string): Promise<Course> {
+        const course = await prisma.course.update({
+            where: {
+                id
+            },
+            data: {
+                image
+            }
+        })
+
+        return course
+    }
 }

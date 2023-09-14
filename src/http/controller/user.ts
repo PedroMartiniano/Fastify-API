@@ -18,14 +18,14 @@ export const createUserController = async (request: FastifyRequest, reply: Fasti
 
     const createUser = makeUserUseCase()
 
-    let user
     try {
-        user = await createUser.executeCreateUser({ email, username, first_name, last_name, image, password })
+        let user = await createUser.executeCreateUser({ email, username, first_name, last_name, image, password })
+
+        return reply.status(201).send(user)
     } catch (e) {
         throw new AppError(`Algo deu errado`, 409)
     }
 
-    return reply.status(201).send({ success: true, data: user }) // não estou conseguindo retornar o user
 }
 
 export const getUserByIdController = async (req: FastifyRequest, rep: FastifyReply) => {
@@ -121,11 +121,24 @@ export const profileController = async (req: FastifyRequest, rep: FastifyReply) 
     }
 }
 
-export const uploadImageController = async (req: FastifyRequest, rep: FastifyReply) => {
+export const updateImageUserController = async (req: FastifyRequest, rep: FastifyReply) => {
+    const idUserSchema = z.object({
+        id: z.string()
+    })
+
+    const { id } = idUserSchema.parse(req.params)
 
     let { filename: image } = (req as any).file
 
-    console.log(image)
 
-    return rep.status(200).send('image uploaded')
+    const updateImageUseCase = makeUserUseCase()
+
+    let user
+    try {
+        user = await updateImageUseCase.executeUpdateImage(id, image)
+    } catch {
+        throw new AppError('something went wrong')
+    }
+
+    return rep.status(200).send(user)
 }

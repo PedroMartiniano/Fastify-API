@@ -9,4 +9,5 @@ export interface CourseRepository {
     deleteCourse(id: string): Promise<Course>
     mostBuyedCourses(): Promise<Course[]>
     ratingCourse(id_course: string, rating: number): Promise<Course | null>
+    updateImage(id: string, image: string): Promise<Course>
 }

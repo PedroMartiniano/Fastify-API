@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
-import { createUserController, deleteUserController, editUserController, getAllUsersController, getUserByIdController, profileController, uploadImageController } from "./controller/user";
-import { createCourseController, deleteCourseController, editCourseController, getAllCoursesController, getCourseByIdController, mostBuyedCoursesController, ratingController } from "./controller/course";
+import { createUserController, deleteUserController, editUserController, getAllUsersController, getUserByIdController, profileController, updateImageUserController } from "./controller/user";
+import { createCourseController, deleteCourseController, editCourseController, getAllCoursesController, getCourseByIdController, mostBuyedCoursesController, ratingController, updateImageCourseController } from "./controller/course";
 import { createStaffController, editStaffController, getStaffById, deleteStaffController, getAllStaffsController } from "./controller/staff";
 import { createModuleController, editModuleController, getModuleByIdController, getModulesByCourseController, moduleGetController } from "./controller/module";
 import { createTaskController, deleteTaskByIdController, getNextTaskController, getTaskByIdController, getTasksByIdModuleController } from "./controller/tasks";
@@ -35,13 +35,15 @@ export const appRoutes = async (app: FastifyInstance) => {
                     type: 'object',
                     properties: {
                         success: { type: 'boolean', example: true },
-                        data: { type: 'object', example: {
-                            email: 'user@email.com',
-                            first_name: 'John',
-                            last_name: 'Doe',
-                            username: 'username',
-                            password: '123456'
-                        }}
+                        data: {
+                            type: 'object', example: {
+                                email: 'user@email.com',
+                                first_name: 'John',
+                                last_name: 'Doe',
+                                username: 'username',
+                                password: '123456'
+                            }
+                        }
                     }
                 },
                 409: {
@@ -52,8 +54,60 @@ export const appRoutes = async (app: FastifyInstance) => {
             }
         },
     }, createUserController)
-    app.post('/user/image', { preHandler: upload.single('profile') }, uploadImageController)
-    app.get('/user/:id', getUserByIdController)
+    app.post('/user/image/:id', {
+        preHandler: upload.single('profile'),
+        schema: {
+            tags: ["Default"],
+            description: 'Should create an image for an user',
+            params: {
+                type: 'object',
+                properties: {
+                    id: { type: 'string' }
+                }
+            },
+            consumes: ['multipart/form-data'],
+            body: {
+                type: 'object',
+                properties: {
+                    profile: { type: 'string', format: 'binary' }
+                }
+            },
+            response: {
+                200: {
+                    description: 'Successful response',
+                    type: 'object',
+                    properties: {
+                        email: {
+                            example: 'user@email.com'
+                        },
+                        first_name: {
+                            example: 'John'
+                        },
+
+                        last_name: {
+                            example: 'Doe'
+                        },
+                        username: {
+                            example: 'username'
+                        },
+                        password: {
+                            example: '123456'
+                        }
+                    }
+                },
+                400: {
+                    description: 'Error message',
+                    type: 'string',
+                    example: 'Something went wrong'
+                }
+            }
+        }
+    }, updateImageUserController)
+    app.get('/user/:id', {
+        schema: {
+
+        }
+    }, getUserByIdController)
     app.get('/users', getAllUsersController)
     app.put('/user', { onRequest: [verifyJwt, verifyRole('MEMBER')] }, editUserController)
     app.delete('/user', { onRequest: [verifyJwt, verifyRole('MEMBER')] }, deleteUserController)
@@ -67,7 +121,8 @@ export const appRoutes = async (app: FastifyInstance) => {
     app.delete('/staff/:id', deleteStaffController)
     app.get('/staffs', getAllStaffsController)
 
-    app.post('/course', { preHandler: upload.single('course') }, createCourseController)
+    app.post('/course', createCourseController)
+    app.post('/course/image/:id', { preHandler: upload.single('course')}, updateImageCourseController)
     app.get('/course/:id', getCourseByIdController)
     app.get('/courses', getAllCoursesController)
     app.put('/course/:id', editCourseController)

@@ -14,7 +14,7 @@ import { upload } from "../app";
 import { createClassController } from "./controller/class";
 
 export const appRoutes = async (app: FastifyInstance) => {
-    // app.addHook('onRequest', verifyJwt)
+    app.addHook('onRequest', verifyJwt)
     app.post('/user', {
         schema: {
             tags: ["Default"],
